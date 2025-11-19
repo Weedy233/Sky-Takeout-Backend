@@ -210,6 +210,7 @@ public class WeChatPayUtil {
         return jsonObject;
     }
 
+    // --- mark: 以下内容为 AI 添加 ---
     /**
      * 检查是否为模拟模式
      * @return
@@ -258,6 +259,7 @@ public class WeChatPayUtil {
         
         return jo;
     }
+    // --- mark: 以上内容为 AI 添加 ---
 
     /**
      * 申请退款

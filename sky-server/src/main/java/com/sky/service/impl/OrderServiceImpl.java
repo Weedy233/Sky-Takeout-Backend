@@ -136,6 +136,7 @@ public class OrderServiceImpl implements OrderService{
         OrderPaymentVO vo = jsonObject.toJavaObject(OrderPaymentVO.class);
         vo.setPackageStr(jsonObject.getString("package"));
 
+        // --- mark: 以下内容为 AI 添加 ---
         // 检查是否为模拟支付，如果是则延迟触发支付成功回调
         if (isMockPayment(jsonObject)) {
             // 延迟3秒后自动触发支付成功回调，模拟用户支付过程
@@ -150,10 +151,12 @@ public class OrderServiceImpl implements OrderService{
                 }
             }).start();
         }
+        // --- mark: 以上内容为 AI 添加 ---
 
         return vo;
     }
 
+    // --- mark: 以下内容为 AI 添加 ---
     /**
      * 检查是否为模拟支付
      * @param jsonObject
@@ -163,6 +166,7 @@ public class OrderServiceImpl implements OrderService{
         String packageStr = jsonObject.getString("package");
         return packageStr != null && packageStr.contains("MOCK_PREPAY_");
     }
+    // --- mark: 以上内容为 AI 添加 ---
 
     /**
      * 支付成功，修改订单状态

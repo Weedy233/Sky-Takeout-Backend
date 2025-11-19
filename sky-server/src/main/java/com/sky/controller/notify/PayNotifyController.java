@@ -31,6 +31,7 @@ public class PayNotifyController {
     @Autowired
     private WeChatProperties weChatProperties;
 
+    // --- mark: 以下内容为 AI 添加 ---
     /**
      * 模拟支付成功回调（用于测试）
      *
@@ -88,6 +89,7 @@ public class PayNotifyController {
                weChatProperties.getPrivateKeyFilePath() == null ||
                "***".equals(weChatProperties.getApiV3Key());
     }
+    // --- mark: 以上内容为 AI 添加 ---
 
     /**
      * 支付成功回调
