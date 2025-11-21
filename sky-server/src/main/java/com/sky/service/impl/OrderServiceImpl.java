@@ -15,8 +15,11 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.context.BaseContext;
+import com.sky.dto.OrdersCancelDTO;
+import com.sky.dto.OrdersConfirmDTO;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersPaymentDTO;
+import com.sky.dto.OrdersRejectionDTO;
 import com.sky.dto.OrdersSubmitDTO;
 import com.sky.entity.AddressBook;
 import com.sky.entity.OrderDetail;
@@ -35,6 +38,7 @@ import com.sky.result.PageResult;
 import com.sky.service.OrderService;
 import com.sky.utils.WeChatPayUtil;
 import com.sky.vo.OrderPaymentVO;
+import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
 
@@ -229,4 +233,123 @@ public class OrderServiceImpl implements OrderService{
         return new PageResult(page.getTotal(), page.getResult());
     }
 
+    /**
+     * 接单
+     * @param ordersConfirmDTO
+     */
+    @Override
+    public void confirm(OrdersConfirmDTO ordersConfirmDTO) {
+        Long id = ordersConfirmDTO.getId();
+        Orders orders = orderMapper.getById(id);
+
+        if (orders == null) {
+            throw new OrderBusinessException("找不到id为" + id + "的订单");
+        }
+
+        if (orders.getStatus() != Orders.TO_BE_CONFIRMED) {
+            throw new OrderBusinessException("订单不处于待接单状态，无法接单");
+        }
+
+        orders.setStatus(Orders.CONFIRMED);
+        orderMapper.update(orders);
+    }
+
+    /**
+     * 拒单
+     * @param orderRejectionDTO
+     */
+    @Override
+    public void rejection(OrdersRejectionDTO orderRejectionDTO) {
+        Long id = orderRejectionDTO.getId();
+        Orders orders = orderMapper.getById(id);
+
+        if (orders == null) {
+            throw new OrderBusinessException("找不到id为" + id + "的订单");
+        }
+
+        if (orders.getStatus() != Orders.TO_BE_CONFIRMED) {
+            throw new OrderBusinessException("订单不处于待接单状态，无法拒单");
+        }
+
+        orders.setStatus(Orders.CANCELLED);
+        orders.setRejectionReason(orderRejectionDTO.getRejectionReason());
+        orderMapper.update(orders);
+    }
+
+    /**
+     * 接单
+     * @param ordersCancelDTO
+     */
+    @Override
+    public void cancel(OrdersCancelDTO ordersCancelDTO) {
+        Long id = ordersCancelDTO.getId();
+        Orders orders = orderMapper.getById(id);
+
+        if (orders == null) {
+            throw new OrderBusinessException("找不到id为" + id + "的订单");
+        }
+
+        if (orders.getStatus() != Orders.CONFIRMED) {
+            throw new OrderBusinessException("订单不处于已接单状态，无法取消");
+        }
+
+        orders.setStatus(Orders.CANCELLED);
+        orders.setCancelReason(ordersCancelDTO.getCancelReason());
+        orders.setCancelTime(LocalDateTime.now());
+        orderMapper.update(orders);
+    }
+
+    /**
+     * 派送订单
+     * @param id
+     */
+    @Override
+    public void delivery(Long id) {
+        Orders orders = orderMapper.getById(id);
+
+        if (orders == null) {
+            throw new OrderBusinessException("找不到id为" + id + "的订单");
+        }
+
+        if (orders.getStatus() != Orders.CONFIRMED) {
+            throw new OrderBusinessException("订单不处于已接单状态，无法派送");
+        }
+
+        orders.setStatus(Orders.DELIVERY_IN_PROGRESS);
+        orders.setDeliveryTime(LocalDateTime.now());
+        orderMapper.update(orders);
+    }
+
+    /**
+     * 完成订单
+     * @param id
+     */
+    @Override
+    public void complete(Long id) {
+        Orders orders = orderMapper.getById(id);
+
+        if (orders == null) {
+            throw new OrderBusinessException("找不到id为" + id + "的订单");
+        }
+
+        if (orders.getStatus() != Orders.DELIVERY_IN_PROGRESS) {
+            throw new OrderBusinessException("订单不处于已派送状态，无法完成");
+        }
+
+        orders.setStatus(Orders.COMPLETED);
+        orderMapper.update(orders);
+    }
+
+    /**
+     * 查询各个状态的订单数量
+     */
+    @Override
+    public OrderStatisticsVO statistics() {
+        OrderStatisticsVO orderStatisticsVO = new OrderStatisticsVO();
+        orderStatisticsVO.setConfirmed(orderMapper.count(Orders.CONFIRMED));
+        orderStatisticsVO.setDeliveryInProgress(orderMapper.count(Orders.DELIVERY_IN_PROGRESS));
+        orderStatisticsVO.setToBeConfirmed(orderMapper.count(Orders.TO_BE_CONFIRMED));
+
+        return orderStatisticsVO;
+    }
 }
