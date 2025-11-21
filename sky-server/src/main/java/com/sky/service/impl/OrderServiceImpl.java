@@ -203,6 +203,10 @@ public class OrderServiceImpl implements OrderService{
     public OrderVO details(Long id) {
         OrderVO orderVO = new OrderVO();
         Orders orders = orderMapper.getById(id);
+
+        AddressBook addressBook = addressBookMapper.getById(orders.getAddressBookId());
+        orders.setAddress(addressBook.getDetail());
+
         BeanUtils.copyProperties(orders, orderVO);
 
         List<OrderDetail> orderDetailsList = orderDetailMapper.getByOrderId(orders.getId());
