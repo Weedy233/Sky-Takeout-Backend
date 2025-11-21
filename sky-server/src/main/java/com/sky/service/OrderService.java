@@ -46,7 +46,7 @@ public interface OrderService {
      * @param ordersPageQueryDTO
      * @return
      */
-    PageResult pageQuery(OrdersPageQueryDTO ordersPageQueryDTO);
+    PageResult conditionalSearch(OrdersPageQueryDTO ordersPageQueryDTO);
 
     /**
      * 接单
@@ -64,7 +64,7 @@ public interface OrderService {
      * 取消订单
      * @param ordersCancelDTO
      */
-    void cancel(OrdersCancelDTO ordersCancelDTO);
+    void adminCancel(OrdersCancelDTO ordersCancelDTO);
 
     /**
      * 派送订单
@@ -83,4 +83,31 @@ public interface OrderService {
      */
     OrderStatisticsVO statistics();
 
+    /**
+     * 验证订单是否属于当前顾客
+     * @param orderId
+     * @return
+     */
+    boolean order_id_valify(Long id);
+
+    /**
+     * 用户取消订单
+     * @param id
+     */
+    void userCancel(Long id);
+
+    /**
+     * 用户分页查询订单
+     * @param page
+     * @param pageSize
+     * @param status
+     * @return
+     */
+    PageResult pageQuery4User(int page, int pageSize, Integer status);
+
+    /**
+     * 用户再来一单
+     * @param id
+     */
+    void repetition(Long id);
 }

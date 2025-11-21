@@ -53,7 +53,7 @@ public class OrderController {
     @ApiOperation("订单搜索")
     public Result<PageResult> conditionSearch(OrdersPageQueryDTO ordersPageQueryDTO) {
         log.info("分页搜索订单：{}", ordersPageQueryDTO);
-        PageResult pageResult = orderService.pageQuery(ordersPageQueryDTO);
+        PageResult pageResult = orderService.conditionalSearch(ordersPageQueryDTO);
         return Result.success(pageResult);
     }
 
@@ -92,7 +92,7 @@ public class OrderController {
     @ApiOperation("取消订单")
     public Result cancel(@RequestBody OrdersCancelDTO ordersCancelDTO) {
         log.info("取消订单：{}", ordersCancelDTO);
-        orderService.cancel(ordersCancelDTO);
+        orderService.adminCancel(ordersCancelDTO);
         return Result.success();
     }
 
