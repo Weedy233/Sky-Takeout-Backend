@@ -53,7 +53,7 @@ public class OrderController {
     @ApiOperation("订单搜索")
     public Result<PageResult> conditionSearch(OrdersPageQueryDTO ordersPageQueryDTO) {
         log.info("分页搜索订单：{}", ordersPageQueryDTO);
-        PageResult pageResult = orderService.pageQuery(ordersPageQueryDTO);
+        PageResult pageResult = orderService.conditionalSearch(ordersPageQueryDTO);
         return Result.success(pageResult);
     }
 
@@ -64,7 +64,7 @@ public class OrderController {
      */
     @PutMapping("/confirm")
     @ApiOperation("接单")
-    public Result confirm(@RequestBody OrdersConfirmDTO ordersConfirmDTO) {
+    public Result<?> confirm(@RequestBody OrdersConfirmDTO ordersConfirmDTO) {
         log.info("接单：{}", ordersConfirmDTO);
         orderService.confirm(ordersConfirmDTO);
         return Result.success();
@@ -77,7 +77,7 @@ public class OrderController {
      */
     @PutMapping("/rejection")
     @ApiOperation("拒单")
-    public Result confirm(@RequestBody OrdersRejectionDTO orderRejectionDTO) {
+    public Result<?> confirm(@RequestBody OrdersRejectionDTO orderRejectionDTO) throws Exception {
         log.info("拒单：{}", orderRejectionDTO);
         orderService.rejection(orderRejectionDTO);
         return Result.success();
@@ -90,9 +90,9 @@ public class OrderController {
      */
     @PutMapping("/cancel")
     @ApiOperation("取消订单")
-    public Result cancel(@RequestBody OrdersCancelDTO ordersCancelDTO) {
+    public Result<?> cancel(@RequestBody OrdersCancelDTO ordersCancelDTO) throws Exception {
         log.info("取消订单：{}", ordersCancelDTO);
-        orderService.cancel(ordersCancelDTO);
+        orderService.adminCancel(ordersCancelDTO);
         return Result.success();
     }
 
@@ -103,7 +103,7 @@ public class OrderController {
      */
     @PutMapping("/delivery/{id}")
     @ApiOperation("派送订单")
-    public Result delivery(@PathVariable Long id) {
+    public Result<?> delivery(@PathVariable Long id) {
         log.info("派送订单：{}", id);
         orderService.delivery(id);
         return Result.success();
@@ -116,7 +116,7 @@ public class OrderController {
      */
     @PutMapping("/complete/{id}")
     @ApiOperation("完成订单")
-    public Result confirm(@PathVariable Long id) {
+    public Result<?> confirm(@PathVariable Long id) {
         log.info("完成订单：{}", id);
         orderService.complete(id);
         return Result.success();
