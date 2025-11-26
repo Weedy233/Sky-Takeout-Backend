@@ -2,6 +2,7 @@ package com.sky.mapper;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -62,4 +63,10 @@ public interface OrderMapper {
      */
     @Select("select * from orders where status = #{status} and order_time < #{orderTime}")
     List<Orders> getByStatusAndOrdersLT(Integer status, LocalDateTime orderTime);
+
+    /**
+     * 获取特定状态下在某个时间区间内所有订单
+     * @param map
+     */
+    Double sumByMap(Map<String,Object> map);
 }
