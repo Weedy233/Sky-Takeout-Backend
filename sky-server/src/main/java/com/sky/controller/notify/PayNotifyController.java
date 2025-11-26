@@ -82,12 +82,12 @@ public class PayNotifyController {
      * @return
      */
     private boolean isMockMode() {
-        return "***".equals(weChatProperties.getMchid()) || 
-               weChatProperties.getMchid() == null || 
-               weChatProperties.getMchid().trim().isEmpty() ||
-               "***".equals(weChatProperties.getPrivateKeyFilePath()) ||
-               weChatProperties.getPrivateKeyFilePath() == null ||
-               "***".equals(weChatProperties.getApiV3Key());
+        return "***".equals(weChatProperties.getMchid()) ||
+                weChatProperties.getMchid() == null ||
+                weChatProperties.getMchid().trim().isEmpty() ||
+                "***".equals(weChatProperties.getPrivateKeyFilePath()) ||
+                weChatProperties.getPrivateKeyFilePath() == null ||
+                "***".equals(weChatProperties.getApiV3Key());
     }
     // --- mark: 以上内容为 AI 添加 ---
 

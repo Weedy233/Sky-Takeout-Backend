@@ -30,7 +30,7 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
-    
+
     /**
      * 用户下单
      * @param ordersSubmitDTO
@@ -66,11 +66,7 @@ public class OrderController {
     @ApiOperation("催单")
     public Result<?> reminder(@PathVariable Long id) {
         log.info("用户催单：{}", id);
-        if (!orderService.order_id_valify(id)) {
-            return Result.error("没有操作该订单的权限");
-        }
-
-        // TODO: 完成催单功能
+        orderService.reminder(id);
         return Result.success();
     }
 
@@ -82,10 +78,6 @@ public class OrderController {
     @ApiOperation("查询订单详情")
     public Result<OrderVO> details(@PathVariable Long id) {
         log.info("用户查询订单：{}", id);
-        if (!orderService.order_id_valify(id)) {
-            return Result.error("没有操作该订单的权限");
-        }
-        
         OrderVO details = orderService.details(id);
         return Result.success(details);
     }
@@ -101,6 +93,7 @@ public class OrderController {
     @GetMapping("/historyOrders")
     @ApiOperation("历史订单查询")
     public Result<PageResult> page(int page, int pageSize, Integer status) {
+        log.info("用户查询历史订单：{}{}{}", page, pageSize, status);
         PageResult pageResult = orderService.pageQuery4User(page, pageSize, status);
         return Result.success(pageResult);
     }
@@ -115,10 +108,6 @@ public class OrderController {
     @ApiOperation("用户取消订单")
     public Result<?> cancel(@PathVariable Long id) throws Exception {
         log.info("用户取消订单：{}", id);
-        if (!orderService.order_id_valify(id)) {
-            return Result.error("没有操作该订单的权限");
-        }
-
         orderService.userCancel(id);
         return Result.success();
     }

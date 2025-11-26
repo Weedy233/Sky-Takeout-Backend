@@ -48,6 +48,7 @@ import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
+import com.sky.websocket.WebSocketServer;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -67,6 +68,8 @@ public class OrderServiceImpl implements OrderService{
     private UserMapper userMapper;
     @Autowired
     private WeChatPayUtil weChatPayUtil;
+    @Autowired
+    private WebSocketServer webSocketServer;
 
     @Value("${sky.shop.address}")
     private String shopAddress;
@@ -213,6 +216,15 @@ public class OrderServiceImpl implements OrderService{
                 .build();
 
         orderMapper.update(orders);
+
+        // 通过 WebSocket 向商家客户端发送来单消息 
+        Map<String, Object> map = new HashMap<>();
+        map.put("type", 1);
+        map.put("orderId", ordersDB.getId());
+        map.put("content", "订单号：" + outTradeNo);
+
+        String jsonString = JSON.toJSONString(map);
+        webSocketServer.sendToAllClient(jsonString);
     }
 
     /**
@@ -321,6 +333,9 @@ public class OrderServiceImpl implements OrderService{
         if (orders == null || !orders.getStatus().equals(Orders.TO_BE_CONFIRMED)) {
             throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
         }
+        if (orders.getUserId() != BaseContext.getCurrentId()) {
+            throw new OrderBusinessException(MessageConstant.ORDER_NO_PERMISSIONS);
+        }
 
         Integer payStatus = orders.getPayStatus();
         if (payStatus == Orders.PAID) {
@@ -380,6 +395,9 @@ public class OrderServiceImpl implements OrderService{
         if (orders == null || !orders.getStatus().equals(Orders.CONFIRMED)) {
             throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
         }
+        if (orders.getUserId() != BaseContext.getCurrentId()) {
+            throw new OrderBusinessException(MessageConstant.ORDER_NO_PERMISSIONS);
+        }
 
         orders.setStatus(Orders.DELIVERY_IN_PROGRESS);
 
@@ -432,6 +450,10 @@ public class OrderServiceImpl implements OrderService{
             throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
         }
 
+        if (ordersDB.getUserId() != BaseContext.getCurrentId()) {
+            throw new OrderBusinessException(MessageConstant.ORDER_NO_PERMISSIONS);
+        }
+
         Orders orders = new Orders();
         orders.setId(ordersDB.getId());
 
@@ -455,17 +477,7 @@ public class OrderServiceImpl implements OrderService{
         orderMapper.update(orders);
     }
 
-    /**
-     * 验证订单是否属于当前顾客
-     * @param orderId
-     * @return
-     */
-    @Override
-    public boolean order_id_valify(Long orderId) {
-        Orders orders = orderMapper.getById(orderId);
-        return orders.getUserId() == BaseContext.getCurrentId();
-    }
-
+    @SuppressWarnings("null")
     @Override
 /**
      * 用户端订单分页查询
@@ -594,5 +606,28 @@ public class OrderServiceImpl implements OrderService{
             // 配送距离超过5000米
             throw new OrderBusinessException("超出配送范围");
         }
+    }
+
+    /**
+     * 用户催单
+     * @param orderId 订单号
+     */
+    @Override
+    public void reminder(Long orderId) {
+        Orders orders = orderMapper.getById(orderId);
+        if (orders == null || !orders.getStatus().equals(Orders.TO_BE_CONFIRMED)) {
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+        if (orders.getUserId() != BaseContext.getCurrentId()) {
+            throw new OrderBusinessException(MessageConstant.ORDER_NO_PERMISSIONS);
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("type", 2);
+        map.put("orderId", orders.getId());
+        map.put("content", "订单号：" + orders.getNumber());
+
+        String jsonString = JSON.toJSONString(map);
+        webSocketServer.sendToAllClient(jsonString);
     }
 }

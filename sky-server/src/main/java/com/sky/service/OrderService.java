@@ -84,13 +84,6 @@ public interface OrderService {
     OrderStatisticsVO statistics();
 
     /**
-     * 验证订单是否属于当前顾客
-     * @param orderId
-     * @return
-     */
-    boolean order_id_valify(Long id);
-
-    /**
      * 用户取消订单
      * @param id
      */
@@ -110,4 +103,10 @@ public interface OrderService {
      * @param id
      */
     void repetition(Long id);
+
+    /**
+     * 用户催单
+     * @param orderId 订单号
+     */
+    void reminder(Long orderId);
 }
