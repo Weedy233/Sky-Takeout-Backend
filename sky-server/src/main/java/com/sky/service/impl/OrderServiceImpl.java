@@ -333,9 +333,6 @@ public class OrderServiceImpl implements OrderService{
         if (orders == null || !orders.getStatus().equals(Orders.TO_BE_CONFIRMED)) {
             throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
         }
-        if (orders.getUserId() != BaseContext.getCurrentId()) {
-            throw new OrderBusinessException(MessageConstant.ORDER_NO_PERMISSIONS);
-        }
 
         Integer payStatus = orders.getPayStatus();
         if (payStatus == Orders.PAID) {
@@ -394,9 +391,6 @@ public class OrderServiceImpl implements OrderService{
 
         if (orders == null || !orders.getStatus().equals(Orders.CONFIRMED)) {
             throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
-        }
-        if (orders.getUserId() != BaseContext.getCurrentId()) {
-            throw new OrderBusinessException(MessageConstant.ORDER_NO_PERMISSIONS);
         }
 
         orders.setStatus(Orders.DELIVERY_IN_PROGRESS);
@@ -477,9 +471,7 @@ public class OrderServiceImpl implements OrderService{
         orderMapper.update(orders);
     }
 
-    @SuppressWarnings("null")
-    @Override
-/**
+    /**
      * 用户端订单分页查询
      *
      * @param pageNum
@@ -487,6 +479,8 @@ public class OrderServiceImpl implements OrderService{
      * @param status
      * @return
      */
+    @SuppressWarnings("null")
+    @Override
     public PageResult pageQuery4User(int pageNum, int pageSize, Integer status) {
         // 设置分页
         PageHelper.startPage(pageNum, pageSize);
@@ -520,6 +514,7 @@ public class OrderServiceImpl implements OrderService{
 
     /**
      * 用户再来一单
+     * @param id
      */
     @Override
     public void repetition(Long id) {

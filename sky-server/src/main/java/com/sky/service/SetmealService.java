@@ -2,16 +2,13 @@ package com.sky.service;
 
 import java.util.List;
 
-import org.springframework.stereotype.Service;
-
 import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.entity.Setmeal;
+import com.sky.result.PageResult;
 import com.sky.vo.DishItemVO;
 import com.sky.vo.SetmealVO;
-import com.sky.result.PageResult;
 
-@Service
 public interface SetmealService {
 
     /**
