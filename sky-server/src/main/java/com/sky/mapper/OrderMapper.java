@@ -66,10 +66,17 @@ public interface OrderMapper {
     List<Orders> getByStatusAndOrdersLT(Integer status, LocalDateTime orderTime);
 
     /**
-     * 获取特定状态下在某个时间区间内所有订单
+     * 获取特定状态下在某个时间区间内所有订单销售额
      * @param map
      */
     Double sumByMap(Map<String,Object> map);
+
+    /**
+     * 根据动态条件统计订单数量
+     * @param map
+     * @return
+     */
+    Integer countByMap(Map<String, Object> map);
 
     /**
      * 获取时间区间内所有已完成订单的菜品和销量数据列表

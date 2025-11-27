@@ -79,8 +79,8 @@ public class ReportControllerImpl implements ReportService {
             begin = begin.plusDays(1);
         }
 
-        List<Object> totalUserList = new ArrayList<>();
-        List<Object> newUserList = new ArrayList<>();
+        List<Integer> totalUserList = new ArrayList<>();
+        List<Integer> newUserList = new ArrayList<>();
 
         for (LocalDate localDate : localDateList) {
             LocalDateTime beginTime = LocalDateTime.of(localDate, LocalTime.MIN);
@@ -89,11 +89,11 @@ public class ReportControllerImpl implements ReportService {
             Map<String, Object> map = new HashMap<>();
 
             map.put("endTime", endTime);
-            Long totalCount = userMapper.getCountMap(map);
+            Integer totalCount = userMapper.getCountByMap(map);
             totalUserList.add(totalCount);
 
             map.put("beginTime", beginTime);
-            Long newCount = userMapper.getCountMap(map);
+            Integer newCount = userMapper.getCountByMap(map);
             newUserList.add(newCount);
         }
 
