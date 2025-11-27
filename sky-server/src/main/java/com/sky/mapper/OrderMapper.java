@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
 import com.github.pagehelper.Page;
+import com.sky.dto.GoodsSalesDTO;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.entity.Orders;
 
@@ -69,4 +70,12 @@ public interface OrderMapper {
      * @param map
      */
     Double sumByMap(Map<String,Object> map);
+
+    /**
+     * 获取时间区间内所有已完成订单的菜品和销量数据列表
+     * @param beginTime
+     * @param endTime
+     * @return
+     */
+    List<GoodsSalesDTO> getSaleTop10(LocalDateTime beginTime, LocalDateTime endTime);
 }
