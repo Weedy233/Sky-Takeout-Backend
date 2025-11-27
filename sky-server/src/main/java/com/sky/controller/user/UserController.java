@@ -54,16 +54,17 @@ public class UserController {
         Map<String, Object> claims = new HashMap<>();
         claims.put(JwtClaimsConstant.USER_ID, user.getId());
         // 2. 利用 JwtUtils 创建 token
-        String token = JwtUtil.createJWT(jwtProperties.getUserSecretKey(),
-                                         jwtProperties.getUserTtl(),
-                                         claims);
-        
+        String token = JwtUtil.createJWT(
+                jwtProperties.getUserSecretKey(),
+                jwtProperties.getUserTtl(),
+                claims);
+
         // 构造用户loginVO
         UserLoginVO userLoginVO = UserLoginVO.builder()
-                                             .id(user.getId())
-                                             .openid(user.getOpenid())
-                                             .token(token)
-                                             .build();
+                .id(user.getId())
+                .openid(user.getOpenid())
+                .token(token)
+                .build();
 
         return Result.success(userLoginVO);
     }

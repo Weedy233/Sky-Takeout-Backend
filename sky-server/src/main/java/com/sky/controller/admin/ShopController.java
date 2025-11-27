@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ShopController {
 
     @Autowired
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
     private final String KEY = "SHOP_STATUS";
 
@@ -48,7 +48,7 @@ public class ShopController {
      */
     @PutMapping("/{status}")
     @ApiOperation("设置营业状态")
-    public Result setStatus(@PathVariable Integer status) {
+    public Result<?> setStatus(@PathVariable Integer status) {
         log.info("设置商铺营业状态：{}", status == 1 ? "营业中" : "打烊中");
         redisTemplate.opsForValue().set(KEY, status);
         return Result.success();

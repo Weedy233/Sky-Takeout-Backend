@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ShopController {
 
     @Autowired
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
     private static final String KEY = "SHOP_STATUS";
 

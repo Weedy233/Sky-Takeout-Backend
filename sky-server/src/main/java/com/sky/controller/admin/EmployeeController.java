@@ -92,7 +92,7 @@ public class EmployeeController {
      */
     @PostMapping()
     @ApiOperation("新增员工")
-    public Result save(@RequestBody EmployeeDTO employeeDTO) {
+    public Result<?> save(@RequestBody EmployeeDTO employeeDTO) {
         log.info("新增员工：{}", employeeDTO);
         employeeService.save(employeeDTO);
         return Result.success();
@@ -109,7 +109,7 @@ public class EmployeeController {
     
     @PostMapping("/status/{status}")
     @ApiOperation("启用禁用员工账号")
-    public Result enableOrDisable(@PathVariable Integer status, Long id) {
+    public Result<?> enableOrDisable(@PathVariable Integer status, Long id) {
         log.info("启用禁用员工账号：{}{}", status, id);
         employeeService.enableOrDisable(status, id);
         return Result.success();
@@ -125,10 +125,10 @@ public class EmployeeController {
     
     @PutMapping()
     @ApiOperation("更改员工信息")
-    public Result update(@RequestBody EmployeeDTO employeeDTO) {
+    public Result<?> update(@RequestBody EmployeeDTO employeeDTO) {
         log.info("更新员工信息：{}", employeeDTO);
         employeeService.update(employeeDTO);
         return Result.success();
     }
-    
+
 }

@@ -41,7 +41,7 @@ public class DishController {
     @Autowired
     private DishService dishService;
     @Autowired
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
     private final static String REDIS_DISH_PREFIX = "dish_category_";
 
@@ -51,7 +51,7 @@ public class DishController {
     @PostMapping
     @CacheEvict(cacheNames = "setmealCache", key = "#dishDTO.categoryId")
     @ApiOperation("新增菜品")
-    public Result save(@RequestBody DishDTO dishDTO) {
+    public Result<?> save(@RequestBody DishDTO dishDTO) {
         log.info("新建菜品：{}", dishDTO);
         dishService.saveWithFlavor(dishDTO);
         String pat = REDIS_DISH_PREFIX + dishDTO.getCategoryId();
@@ -76,7 +76,7 @@ public class DishController {
     @DeleteMapping
     @CacheEvict(cacheNames = "setmealCache", allEntries = true)
     @ApiOperation("批量删除菜品")
-    public Result delete(@RequestParam List<Long> ids) {
+    public Result<?> delete(@RequestParam List<Long> ids) {
         log.info("批量删除菜品：{}", ids);
         dishService.deleteBatch(ids);
         cleanCache(REDIS_DISH_PREFIX + "*");
@@ -101,7 +101,7 @@ public class DishController {
     @PutMapping
     @CacheEvict(cacheNames = "setmealCache", allEntries = true)
     @ApiOperation("修改菜品")
-    public Result update(@RequestBody DishDTO dishDTO) {
+    public Result<?> update(@RequestBody DishDTO dishDTO) {
         log.info("修改菜品：{}", dishDTO);
         dishService.updateWithFlavor(dishDTO);
         cleanCache(REDIS_DISH_PREFIX + "*");
@@ -114,7 +114,7 @@ public class DishController {
     @PostMapping("/status/{status}")
     @CacheEvict(cacheNames = "setmealCache", allEntries = true)
     @ApiOperation("起售停售菜品")
-    public Result enableOrDisable(@PathVariable Integer status, Long id) {
+    public Result<?> enableOrDisable(@PathVariable Integer status, Long id) {
         log.info("起售禁售菜品：{}{}", status, id);
         dishService.enableOrDisable(status, id);
         cleanCache(REDIS_DISH_PREFIX + "*");
@@ -133,7 +133,7 @@ public class DishController {
     }
 
     private void cleanCache(String pattern) {
-        Set keys = redisTemplate.keys(pattern);
+        Set<String> keys = redisTemplate.keys(pattern);
         redisTemplate.delete(keys);
     }
 }

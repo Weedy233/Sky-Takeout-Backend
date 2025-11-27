@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 public class RedisConfiguration {
 
     @Bean
-    public RedisTemplate redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
         log.info("开始创建 redis 模板对象...");
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<String, Object>();
 
