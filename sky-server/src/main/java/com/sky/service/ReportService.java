@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.sky.vo.OrderReportVO;
 import com.sky.vo.SalesTop10ReportVO;
 import com.sky.vo.TurnoverReportVO;
 import com.sky.vo.UserReportVO;
@@ -41,5 +42,7 @@ public interface ReportService {
      * 导出运营数据报表
      */
     public void exportBusinessData(HttpServletResponse response);
+
+    public OrderReportVO getOrderStatistics(LocalDate begin, LocalDate end);
 
 }
