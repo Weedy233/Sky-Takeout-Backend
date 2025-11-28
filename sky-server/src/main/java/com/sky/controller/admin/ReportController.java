@@ -2,6 +2,8 @@ package com.sky.controller.admin;
 
 import java.time.LocalDate;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +31,7 @@ public class ReportController {
 
     /**
      * 营业额统计
+     * 
      * @param begin
      * @param end
      * @return
@@ -44,6 +47,7 @@ public class ReportController {
 
     /**
      * 用户统计
+     * 
      * @param begin
      * @param end
      * @return
@@ -59,6 +63,7 @@ public class ReportController {
 
     /**
      * 菜品前十统计
+     * 
      * @param begin
      * @param end
      * @return
@@ -70,5 +75,15 @@ public class ReportController {
             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end) {
         log.info("查询销量前十: {}, {}", begin, end);
         return Result.success(reportService.getSaleTop10(begin, end));
+    }
+
+    /**
+     * 导出运营数据报表
+     */
+    @ApiOperation("导出运营数据报表")
+    @GetMapping("/export")
+    public void export(HttpServletResponse response) {
+        log.info("导出 Excel 报表");
+        reportService.exportBusinessData(response);
     }
 }

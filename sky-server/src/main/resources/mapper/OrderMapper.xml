@@ -84,13 +84,11 @@
         limit 0, 10
     </select>
 
-    <!-- countByMap -->
-
     <select id="countByMap" resultType="java.lang.Integer">
         select count(id) from orders
         <where>
-            <if test="begin != null"> and order_time &gt; #{begin} </if>
-            <if test="end != null"> and order_time &lt; #{end} </if>
+            <if test="beginTime != null"> and order_time &gt; #{beginTime} </if>
+            <if test="endTime != null"> and order_time &lt; #{endTime} </if>
             <if test="status != null"> and status = #{status} </if>
         </where>
     </select>
