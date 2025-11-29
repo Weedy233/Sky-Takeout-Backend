@@ -39,13 +39,11 @@ sky:
     # 设置jwt签名加密时使用的秘钥
     admin-secret-key: itcast
     # 设置jwt过期时间
-    # Todo: 将 ttl 修改回 7200000
-    admin-ttl: 720000000
+    admin-ttl: 7200000
     # 设置前端传递过来的令牌名称
     admin-token-name: token
     user-secret-key: itheima
-    # Todo: 将 ttl 修改回 7200000
-    user-ttl: 720000000
+    user-ttl: 7200000
     user-token-name: authentication
 
   alioss:
