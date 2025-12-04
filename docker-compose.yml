@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  sky-server:
+    image: weedy233/sky-takeout:latest
+    container_name: sky-server
+    ports:
+      - "8080:8080"
+      - "8001:8001"
+    environment:
+      # --- 数据库配置 ---
+      - SKY_DB_HOST=mysql-server
+      - SKY_DB_PORT=3306
+      - SKY_DB_USERNAME=root
+      - SKY_DB_PASSWORD=your_strong_password
+      - SKY_DB_NAME=sky_take_out
+
+      # --- Redis 配置 ---
+      - SKY_REDIS_HOST=redis-server
+      - SKY_REDIS_PORT=6379
+      - SKY_REDIS_PASSWORD=your_redis_password
+      - SKY_REDIS_DATABASE=0
+
+      # --- 密钥配置 ---
+      - SKY_JWT_ADMIN_SECRET=complex_secret_key_123
+      - SKY_JWT_USER_SECRET=complex_secret_key_456
+      - SKY_ALIOSS_ACCESS_KEY_ID=xxxxxx
+      - SKY_ALIOSS_ACCESS_KEY_SECRET=xxxxxx
+      - SKY_ALIOSS_ENDPOINT=oss-cn-hangzhou.aliyuncs.com
+      - SKY_ALIOSS_BUCKET_NAME=sky-take-out
+
+    depends_on:
+      - mysql-server
+      - redis-server
+
+  mysql-server:
+    image: mysql:8.0
+    container_name: sky-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: your_strong_password
+      MYSQL_DATABASE: sky_take_out
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./sql/sky_takeout_init.sql:/docker-entrypoint-initdb.d/init.sql
+      - mysql_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  redis-server:
+    image: redis:6.2
+    container_name: sky-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass your_redis_password --appendonly yes
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      timeout: 20s
+      retries: 10
+
+volumes:
+  mysql_data:
+  redis_data:

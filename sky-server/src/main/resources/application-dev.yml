@@ -1,32 +1,36 @@
 sky:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    host: localhost
-    port: 3306
-    database: sky_take_out
-    username: root
-    password: root
+    host: ${SKY_DB_HOST:localhost}
+    port: ${SKY_DB_PORT:3306}
+    database: ${SKY_DB_NAME:sky_take_out}
+    username: ${SKY_DB_USERNAME:root}
+    password: ${SKY_DB_PASSWORD:root} 
   alioss:
-    endpoint: ${SKY_ALIOSS_ENDPOINT}
-    access-key-id: ${SKY_ALIOSS_ACCESS_KEY_ID}
-    access-key-secret: ${SKY_ALIOSS_ACCESS_KEY_SECRET}
-    bucket-name: ${SKY_ALIOSS_BUCKET_NAME}
+    endpoint: ${SKY_ALIOSS_ENDPOINT:oss-cn-hangzhou.aliyuncs.com}
+    access-key-id: ${SKY_ALIOSS_ACCESS_KEY_ID:your_key_id}
+    access-key-secret: ${SKY_ALIOSS_ACCESS_KEY_SECRET:your_key_secret}
+    bucket-name: ${SKY_ALIOSS_BUCKET_NAME:sky-take-out}
   redis:
-    host: localhost
-    port: 6379
-    password: 123456
-    database: 0
+    host: ${SKY_REDIS_HOST:localhost}
+    port: ${SKY_REDIS_PORT:6379}
+    password: ${SKY_REDIS_PASSWORD:123456}
+    database: ${SKY_REDIS_DATABASE:0}
   wechat:
-    appid: ${SKY_WECHAT_APPID}
-    secret: ${SKY_WECHAT_SECRET}
-    mchid: ${SKY_WECHAT_MCHID}
-    mchSerialNo: ${SKY_WECHAT_MCHSERIALNO}
-    privateKeyFilePath: ${SKY_WECHAT_PRIVATEKEYFILEPATH}
-    apiV3Key: ${SKY_WECHAT_APIV3KEY}
-    weChatPayCertFilePath: ${SKY_WECHAT_WECHATPAYCERTFILEPATH}
-    notifyUrl: ${SKY_WECHAT_NOTIFYURL}
-    refundNotifyUrl: ${SKY_WECHAT_REFUNDNOTIFYURL}
+    appid: ${SKY_WECHAT_APPID:wx_appid_placeholder}
+    secret: ${SKY_WECHAT_SECRET:wx_secret_placeholder}
+    mchid: ${SKY_WECHAT_MCHID:wx_mchid_placeholder}
+    mchSerialNo: ${SKY_WECHAT_MCHSERIALNO:wx_serial_placeholder}
+    privateKeyFilePath: ${SKY_WECHAT_PRIVATEKEYFILEPATH:./cert/private_key.pem}
+    apiV3Key: ${SKY_WECHAT_APIV3KEY:wx_apiv3_placeholder}
+    weChatPayCertFilePath: ${SKY_WECHAT_WECHATPAYCERTFILEPATH:./cert/wechat_pay_cert.pem}
+    notifyUrl: ${SKY_WECHAT_NOTIFYURL:http://localhost/notify}
+    refundNotifyUrl: ${SKY_WECHAT_REFUNDNOTIFYURL:http://localhost/refund}
   shop:
-    address: 北京市海淀区上地十街
+    address: ${SKY_SHOP_ADDRESS:北京市海淀区上地十街}
   baidu:
-    ak: 123
+    ak: ${SKY_BAIDU_AK:baidu_ak_placeholder}
+
+  jwt:
+    admin-secret-key: ${SKY_JWT_ADMIN_SECRET:itcast}
+    user-secret-key: ${SKY_JWT_USER_SECRET:itheima}

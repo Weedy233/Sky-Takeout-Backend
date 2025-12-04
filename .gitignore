@@ -2,5 +2,6 @@
 .idea
 *.iml
 *.class
+*.tar
 # *Test.java
 .vscode
